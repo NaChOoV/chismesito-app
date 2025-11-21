@@ -20,7 +20,7 @@ export default function ZoomInfo() {
             className={`${backgroundColor} px-4 py-1 rounded-md flex items-center align-middle gap-2`}
         >
             {icon}
-            <div className={`${textColor} mt-1 text-lg`}>{message}</div>
+            <div className={`${textColor} text-lg`}>{message}</div>
         </div>
     );
 }

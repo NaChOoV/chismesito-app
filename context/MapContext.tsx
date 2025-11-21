@@ -2,7 +2,7 @@ import { createContext, useContext, useState, ReactNode, useMemo, useEffect } fr
 import { useMapEvents } from 'react-leaflet';
 import { useGossipContext } from './GossipContext';
 
-const MIN_ZOOM = 17;
+const MIN_ZOOM = 16;
 
 interface MapContextType {
     zoom: number;
