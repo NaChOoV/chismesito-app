@@ -21,12 +21,6 @@ export async function GET(request: NextRequest) {
     }
 
     const validatedParams = validationResult.data;
-    console.log({
-        x0: validatedParams.swLng,
-        y0: validatedParams.swLat,
-        x1: validatedParams.neLng,
-        y1: validatedParams.neLat,
-    });
 
     const { swLng, swLat, neLng, neLat } = validatedParams;
     const envelopeExpression = sql`ST_MakeEnvelope(${swLat}, ${swLng}, ${neLat}, ${neLng}, 4326)`;
