@@ -57,6 +57,7 @@ export function GossipForm() {
                 y: newPosition ? newPosition[1] : 0,
             },
         });
+        form.reset();
     }
 
     return (
