@@ -3,11 +3,13 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { CommentType, GossipType } from '../src/db/schema';
 import { MapBounds, useMapContext } from './MapContext';
+import { set } from 'zod';
 
 type NewGossip = Omit<GossipType, 'id' | 'createdAt' | 'updatedAt'>;
 
 interface GossipsContextType {
     gossips: GossipType[];
+    recentGossips: GossipType[];
     comments: CommentType[];
     loading: boolean;
     error: string | null;
@@ -26,6 +28,8 @@ interface GossipsContextType {
 const GossipsContext = createContext<GossipsContextType | undefined>(undefined);
 export function GossipsProvider({ children }: { children: React.ReactNode }) {
     const [gossips, setGossips] = useState<GossipType[]>([]);
+    const [recentGossips, setRecentGossips] = useState<GossipType[]>([]);
+
     const [comments, setComments] = useState<CommentType[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -69,6 +73,22 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
         [clearGossips, addGossips]
     );
 
+    const fetchRecentGossips = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/gossips/recent`);
+            if (!response.ok) throw new Error('Error fetching recent gossips');
+
+            const gossipsResponse = (await response.json()) as GossipType[];
+            setRecentGossips(gossipsResponse);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     const createGossip = useCallback(
         async (gossip: NewGossip) => {
             setLoading(true);
@@ -95,27 +115,31 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
         [addGossips, setNewPosition]
     );
 
-    const createComment = useCallback(async (gossipId: number, description: string) => {
-        setLoading(true);
-        try {
-            const response = await fetch('/api/comments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ gossipId, description }),
-            });
-            if (!response.ok) throw new Error('Error creating comment');
+    const createComment = useCallback(
+        async (gossipId: number, description: string) => {
+            setLoading(true);
+            try {
+                const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ gossipId, description }),
+                });
+                if (!response.ok) throw new Error('Error creating comment');
 
-            const newComment = (await response.json()) as CommentType;
+                const newComment = (await response.json()) as CommentType;
 
-            setComments((prev) => [...prev, newComment]);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+                setComments((prev) => [...prev, newComment]);
+                setNewPosition(undefined);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        },
+        [setComments, setNewPosition]
+    );
 
     const fetchComments = useCallback(async (gossipId: number) => {
         setLoading(true);
@@ -137,11 +161,13 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
     const contextValue = useMemo(
         () => ({
             gossips,
+            recentGossips,
             comments,
             loading,
             error,
             // API CALLS
             fetchGossips,
+            fetchRecentGossips,
             createGossip,
             createComment,
             fetchComments,
@@ -152,13 +178,17 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
         }),
         [
             gossips,
+            recentGossips,
             comments,
             loading,
             error,
+            // API CALLS
             fetchGossips,
+            fetchRecentGossips,
             createGossip,
             createComment,
             fetchComments,
+            // INTERNAL STATE
             addGossips,
             clearGossips,
             clearComments,
