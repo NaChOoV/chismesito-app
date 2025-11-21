@@ -1,7 +1,7 @@
 'use client';
 
 import { useMapContext } from '../../../context/MapContext';
-import RecentButton from '../../RecentButton';
+import RecentButton from './RecentButton';
 import FetchButton from './FetchButton';
 import ZoomInfo from './ZoomNotification';
 

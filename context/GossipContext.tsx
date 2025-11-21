@@ -16,6 +16,7 @@ interface GossipsContextType {
     // API CALLS
     createGossip: (gossip: NewGossip) => Promise<void>;
     fetchGossips: (mapBounds: MapBounds) => Promise<void>;
+    fetchRecentGossips: () => Promise<void>;
     createComment: (gossipId: number, text: string) => Promise<void>;
     fetchComments: (gossipId: number) => Promise<void>;
 
@@ -36,8 +37,12 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
 
     const { setNewPosition } = useMapContext();
 
-    const addGossips = useCallback((gossips: GossipType[]) => {
-        setGossips((prev) => [...prev, ...gossips]);
+    const addGossips = useCallback((newGossips: GossipType[]) => {
+        setGossips((prev) => {
+            const existingIds = new Set(prev.map((g) => g.id));
+            const uniqueNewGossips = newGossips.filter((g) => !existingIds.has(g.id));
+            return [...prev, ...uniqueNewGossips];
+        });
     }, []);
 
     const clearGossips = useCallback(() => {

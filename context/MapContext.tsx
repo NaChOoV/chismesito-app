@@ -1,6 +1,15 @@
-import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
+import {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useMemo,
+    useEffect,
+    useCallback,
+} from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { useGossipContext } from './GossipContext';
+import { GossipType } from '../src/db/schema';
 
 const MIN_ZOOM = 16;
 
@@ -11,6 +20,7 @@ interface MapContextType {
     setZoom: (zoom: number) => void;
     setMapInstance: (map: L.Map) => void;
     setNewPosition: (position: [number, number] | undefined) => void;
+    flyToPosition: (position: [number, number]) => void;
     canSeeGossip: boolean;
     minZoom: number;
 }
@@ -27,6 +37,14 @@ export function MapProvider({ children }: { children: ReactNode }) {
     const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
     const [newPosition, setNewPosition] = useState<[number, number] | undefined>(undefined);
 
+    const flyToPosition = useCallback(
+        (position: [number, number]) => {
+            if (!mapInstance) return;
+            mapInstance.flyTo({ lat: position[1], lng: position[0] }, 18);
+        },
+        [mapInstance]
+    );
+
     const contextValue = useMemo(
         () => ({
             zoom,
@@ -35,10 +53,11 @@ export function MapProvider({ children }: { children: ReactNode }) {
             setZoom,
             setMapInstance,
             setNewPosition,
+            flyToPosition,
             canSeeGossip: zoom >= MIN_ZOOM,
             minZoom: MIN_ZOOM,
         }),
-        [zoom, mapInstance, newPosition]
+        [zoom, mapInstance, newPosition, flyToPosition]
     );
 
     return <MapContext.Provider value={contextValue}>{children}</MapContext.Provider>;
