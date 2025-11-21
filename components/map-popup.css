@@ -1,0 +1,27 @@
+/* Estilos personalizados para el Popup de react-leaflet */
+
+/* Ocultar el botón de cerrar */
+.leaflet-popup-close-button {
+    display: none !important;
+}
+
+/* Ajustar el ancho del contenedor del popup */
+.custom-popup .leaflet-popup-content-wrapper {
+    max-width: 500px;
+    min-width: 320px;
+    width: auto;
+    padding: 0;
+    border-radius: 0.75rem;
+}
+
+/* Ajustar el contenido del popup */
+.custom-popup .leaflet-popup-content {
+    margin: 0;
+    width: 100% !important;
+    max-width: 500px;
+}
+
+/* Ajustar la punta del popup */
+.custom-popup .leaflet-popup-tip-container {
+    margin: 0 auto;
+}
