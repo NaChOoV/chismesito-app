@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { Analytics } from '@vercel/analytics/vue';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+            <body className={`${geistSans.variable} ${geistMono.variable}`}>
+                {children}
+                <Analytics />
+            </body>
         </html>
     );
 }
