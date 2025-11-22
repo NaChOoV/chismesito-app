@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { MapContainer, TileLayer, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMap, useMapContext } from '@/context/MapContext';
@@ -51,6 +52,11 @@ function MapContent() {
     const { gossips } = useGossipContext();
     useMap();
 
+    const popupPosition = useMemo(
+        () => (position ? [position[1], position[0]] : null),
+        [position]
+    );
+
     return (
         <>
             <TileLayer
@@ -64,9 +70,9 @@ function MapContent() {
                 <GossipTooltip key={gossip.id} gossip={gossip} />
             ))}
 
-            {position && (
+            {popupPosition && (
                 <Popup
-                    position={[position[1], position[0]]}
+                    position={popupPosition as [number, number]}
                     closeButton={false}
                     maxWidth={500}
                     minWidth={320}
