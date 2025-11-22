@@ -11,6 +11,7 @@ interface GossipsContextType {
     recentGossips: GossipType[];
     comments: CommentType[];
     loading: boolean;
+    loadingComments: boolean;
     error: string | null;
     // API CALLS
     createGossip: (gossip: NewGossip) => Promise<void>;
@@ -31,6 +32,8 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
     const [recentGossips, setRecentGossips] = useState<GossipType[]>([]);
 
     const [comments, setComments] = useState<CommentType[]>([]);
+    const [loadingComments, setLoadingComments] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -146,7 +149,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
     );
 
     const fetchComments = useCallback(async (gossipId: number) => {
-        setLoading(true);
+        setLoadingComments(true);
         setComments([]);
         setError(null);
         try {
@@ -158,7 +161,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         } finally {
-            setLoading(false);
+            setLoadingComments(false);
         }
     }, []);
 
@@ -167,6 +170,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
             gossips,
             recentGossips,
             comments,
+            loadingComments,
             loading,
             error,
             // API CALLS
@@ -184,6 +188,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
             gossips,
             recentGossips,
             comments,
+            loadingComments,
             loading,
             error,
             // API CALLS

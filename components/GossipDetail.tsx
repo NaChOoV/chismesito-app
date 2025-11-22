@@ -31,7 +31,8 @@ const options = {
 } as Intl.DateTimeFormatOptions;
 
 export function GossipDetail({ gossip, onClose }: GossipDetailProps) {
-    const { createComment, fetchComments, comments, clearComments, loading } = useGossipContext();
+    const { createComment, fetchComments, comments, clearComments, loadingComments } =
+        useGossipContext();
     const hasFetched = useRef(false);
 
     const form = useForm<z.infer<typeof commentSchema>>({
@@ -59,7 +60,9 @@ export function GossipDetail({ gossip, onClose }: GossipDetailProps) {
             <div className="flex justify-between items-start mb-2">
                 <div className="pt-1 pl-1">
                     <h3 className="font-bold text-lg leading-none mb-1">{gossip.title}</h3>
-                    <p className="text-muted-foreground text-sm">{gossip.description}</p>
+                    <p className="text-muted-foreground text-sm mt-2! mb-2!">
+                        {gossip.description}
+                    </p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                     {/* <Button
@@ -72,7 +75,7 @@ export function GossipDetail({ gossip, onClose }: GossipDetailProps) {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-gray-400 hover:text-gray-600"
+                        className="h-8 w-8 text-gray-400 hover:text-gray-600 cursor-pointer"
                         onClick={(e) => {
                             e.stopPropagation();
                             clearComments();
@@ -89,10 +92,10 @@ export function GossipDetail({ gossip, onClose }: GossipDetailProps) {
                 <h4 className="font-bold text-sm mb-2 text-gray-950">Comentarios</h4>
                 <div
                     className={`overflow-y-auto pr-3 space-y-3 custom-scrollbar transition-all duration-300 ease-in-out ${
-                        comments.length > 4 ? 'h-[150px]' : 'min-h-[60px] max-h-[150px]'
+                        comments.length > 4 ? 'h-[150px]' : 'min-h-5 max-h-[150px]'
                     }`}
                 >
-                    {loading && comments.length === 0 ? (
+                    {loadingComments && comments.length === 0 ? (
                         <div className="flex justify-center items-center h-full py-4">
                             <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
                         </div>
