@@ -107,7 +107,7 @@ export function GossipForm() {
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="form-rhf-demo-description">
-                                        Descripcion
+                                        Descripcion (Opcional)
                                     </FieldLabel>
                                     <InputGroup>
                                         <InputGroupTextarea
