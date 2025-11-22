@@ -24,7 +24,7 @@ export default function FetchButton() {
                     variant="outline"
                     size="icon"
                     aria-label="Submit"
-                    className="animate-pulse-eye w-10 h-10 rounded-full border-2 cursor-pointer"
+                    className="animate-pulse-eye bg-blue-500 w-10 h-10 border-2 cursor-pointer"
                     onClick={() => {
                         setIsOpen(false);
                         setHasBeenClicked(true);

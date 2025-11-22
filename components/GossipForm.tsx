@@ -61,7 +61,12 @@ export function GossipForm() {
     }
 
     return (
-        <Card className="w-full sm:max-w-md relative">
+        <Card
+            className="w-full sm:max-w-md relative"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+        >
             <Button
                 variant="ghost"
                 size="icon"

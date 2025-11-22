@@ -3,7 +3,7 @@
 import { ZoomInIcon, EyeIcon } from 'lucide-react';
 import { useMapContext } from '@/context/MapContext';
 
-export default function ZoomInfo() {
+export default function ZoomNotification() {
     const { canSeeGossip } = useMapContext();
 
     const message = canSeeGossip ? 'Puedes ver chismes' : 'Haz zoom para ver chismes';

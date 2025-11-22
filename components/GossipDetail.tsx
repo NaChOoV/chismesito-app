@@ -55,7 +55,12 @@ export function GossipDetail({ gossip, onClose }: GossipDetailProps) {
     }
 
     return (
-        <div className="w-[300px] sm:w-[350px] bg-white rounded-lg overflow-hidden p-1">
+        <div
+            className="w-[300px] sm:w-[350px] bg-white rounded-lg overflow-hidden p-1"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+        >
             {/* Header */}
             <div className="flex justify-between items-start mb-2">
                 <div className="pt-1 pl-1">

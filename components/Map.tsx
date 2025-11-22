@@ -40,6 +40,8 @@ const MapComponent = () => {
                 markerZoomAnimation={true}
                 zoomSnap={0.25}
                 zoomDelta={20}
+                // @ts-expect-error - tap is not in the types but it is supported by leaflet
+                tap={false}
             >
                 <MapContent />
             </MapContainer>
@@ -52,10 +54,7 @@ function MapContent() {
     const { gossips } = useGossipContext();
     useMap();
 
-    const popupPosition = useMemo(
-        () => (position ? [position[1], position[0]] : null),
-        [position]
-    );
+    const popupPosition = useMemo(() => (position ? [position[1], position[0]] : null), [position]);
 
     return (
         <>

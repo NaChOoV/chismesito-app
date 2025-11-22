@@ -30,6 +30,10 @@ const GossipTooltip = memo(function GossipTooltip({ gossip }: { gossip: GossipTy
                             e.nativeEvent.stopImmediatePropagation();
                             setIsSelected(true);
                         }}
+                        onTouchStart={(e) => {
+                            e.stopPropagation();
+                            e.nativeEvent.stopImmediatePropagation();
+                        }}
                     >
                         {gossip.title}
                     </div>
