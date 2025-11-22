@@ -3,7 +3,6 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { CommentType, GossipType } from '../src/db/schema';
 import { MapBounds, useMapContext } from './MapContext';
-import { set } from 'zod';
 
 type NewGossip = Omit<GossipType, 'id' | 'createdAt' | 'updatedAt'>;
 

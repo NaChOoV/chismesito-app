@@ -8,8 +8,8 @@ export const boundsQueryParamSchema = z.object({
 });
 
 export const newGossipSchema = z.object({
-    title: z.string().min(1).max(50),
-    description: z.string().min(1).max(100),
+    title: z.string().min(1).max(30),
+    description: z.string().max(100).optional().or(z.null()),
     location: z.object({
         x: z.number().min(-180).max(180),
         y: z.number().min(-90).max(90),

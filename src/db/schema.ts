@@ -6,7 +6,7 @@ export const gossip = pgTable(
     {
         id: serial().primaryKey(),
         title: text('title').notNull(),
-        description: text('description').notNull(),
+        description: text('description'),
         location: geometry('location', {
             type: 'point',
             mode: 'xy',

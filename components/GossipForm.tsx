@@ -28,12 +28,12 @@ import { useGossipContext } from '../context/GossipContext';
 const formSchema = z.object({
     title: z
         .string()
-        .min(5, 'El título del chisme debe tener al menos 5 caracteres.')
-        .max(32, 'El título del chisme debe tener como máximo 32 caracteres.'),
+        .min(4, 'El título del chisme debe tener al menos 4 caracteres.')
+        .max(30, 'El título del chisme debe tener como máximo 30 caracteres.'),
     description: z
         .string()
-        .min(10, 'La descripción debe tener al menos 10 caracteres.')
-        .max(100, 'La descripción debe tener como máximo 100 caracteres.'),
+        .max(100, 'La descripción debe tener como máximo 100 caracteres.')
+        .optional(),
 });
 
 export function GossipForm() {
@@ -51,7 +51,7 @@ export function GossipForm() {
     function onSubmit(data: z.infer<typeof formSchema>) {
         createGossip({
             title: data.title,
-            description: data.description,
+            description: data.description || null,
             location: {
                 x: newPosition ? newPosition[0] : 0,
                 y: newPosition ? newPosition[1] : 0,
@@ -120,7 +120,7 @@ export function GossipForm() {
                                         />
                                         <InputGroupAddon align="block-end">
                                             <InputGroupText className="tabular-nums">
-                                                {field.value.length}/100 caracteres
+                                                {field.value?.length || 0}/100 caracteres
                                             </InputGroupText>
                                         </InputGroupAddon>
                                     </InputGroup>
