@@ -7,6 +7,7 @@ import { MapBounds, useMapContext } from './MapContext';
 type NewGossip = Omit<GossipType, 'id' | 'createdAt' | 'updatedAt'>;
 
 interface GossipsContextType {
+    selectedGossipId?: number;
     gossips: GossipType[];
     recentGossips: GossipType[];
     comments: CommentType[];
@@ -24,10 +25,12 @@ interface GossipsContextType {
     addGossips: (gossips: GossipType[]) => void;
     clearGossips: () => void;
     clearComments: () => void;
+    setSelectedGossip: (gossipId: number | undefined) => void;
 }
 
 const GossipsContext = createContext<GossipsContextType | undefined>(undefined);
 export function GossipsProvider({ children }: { children: React.ReactNode }) {
+    const [selectedGossipId, setSelectedGossipId] = useState<number | undefined>(undefined);
     const [gossips, setGossips] = useState<GossipType[]>([]);
     const [recentGossips, setRecentGossips] = useState<GossipType[]>([]);
 
@@ -49,10 +52,15 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
 
     const clearGossips = useCallback(() => {
         setGossips([]);
+        setSelectedGossipId(undefined);
     }, []);
 
     const clearComments = useCallback(() => {
         setComments([]);
+    }, []);
+
+    const setSelectedGossip = useCallback((gossipId: number | undefined) => {
+        setSelectedGossipId(gossipId);
     }, []);
 
     const fetchGossips = useCallback(
@@ -60,14 +68,12 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
             setLoading(true);
             setError(null);
             try {
-                console.log('Fetching gossips with bounds:', mapBounds);
                 const response = await fetch(
                     `/api/gossips?swLng=${mapBounds.southWest[0]}&swLat=${mapBounds.southWest[1]}&neLng=${mapBounds.northEast[0]}&neLat=${mapBounds.northEast[1]}`
                 );
                 if (!response.ok) throw new Error('Error fetching gossips');
 
                 const gossipsResponse = (await response.json()) as GossipType[];
-                console.log('Gossips fetched:', gossipsResponse);
 
                 clearGossips();
                 addGossips(gossipsResponse);
@@ -113,6 +119,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
 
                 addGossips([newGossip]);
                 setNewPosition(undefined);
+                setSelectedGossipId(newGossip.id);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -167,6 +174,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
 
     const contextValue = useMemo(
         () => ({
+            selectedGossipId,
             gossips,
             recentGossips,
             comments,
@@ -180,11 +188,13 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
             createComment,
             fetchComments,
             // INTERNAL STATE
+            setSelectedGossip,
             addGossips,
             clearGossips,
             clearComments,
         }),
         [
+            selectedGossipId,
             gossips,
             recentGossips,
             comments,
@@ -198,6 +208,7 @@ export function GossipsProvider({ children }: { children: React.ReactNode }) {
             createComment,
             fetchComments,
             // INTERNAL STATE
+            setSelectedGossip,
             addGossips,
             clearGossips,
             clearComments,

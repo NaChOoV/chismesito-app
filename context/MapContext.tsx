@@ -9,7 +9,6 @@ import {
 } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { useGossipContext } from './GossipContext';
-import { GossipType } from '../src/db/schema';
 
 const MIN_ZOOM = 16;
 
@@ -76,8 +75,8 @@ export function useMapContext() {
  * and update the context automatically
  */
 export function useMap() {
-    const { setZoom, setMapInstance, setNewPosition, canSeeGossip } = useMapContext();
-    useGossipContext();
+    const { setZoom, setMapInstance, setNewPosition, canSeeGossip, newPosition } = useMapContext();
+    const { selectedGossipId, setSelectedGossip } = useGossipContext();
 
     const map = useMapEvents({
         zoomend: () => {
@@ -85,6 +84,16 @@ export function useMap() {
         },
         click: (e) => {
             if (!canSeeGossip) return;
+            if (selectedGossipId) {
+                setSelectedGossip(undefined);
+                return;
+            }
+
+            if (newPosition) {
+                setNewPosition(undefined);
+                return;
+            }
+
             map.flyTo(e.latlng, map.getZoom());
 
             setNewPosition([e.latlng.lng, e.latlng.lat]);

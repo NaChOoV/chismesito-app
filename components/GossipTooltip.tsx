@@ -2,14 +2,17 @@ import { Marker, Tooltip, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { GossipType } from '../src/db/schema';
 import { GossipDetail } from './GossipDetail';
-import { useState, memo } from 'react';
+import { memo, useMemo } from 'react';
+import { useGossipContext } from '../context/GossipContext';
 
 const invisibleIcon = L.divIcon({
     className: 'display-none',
 });
 
 const GossipTooltip = memo(function GossipTooltip({ gossip }: { gossip: GossipType }) {
-    const [isSelected, setIsSelected] = useState(false);
+    const { selectedGossipId, setSelectedGossip } = useGossipContext();
+
+    const isSelected = useMemo(() => selectedGossipId === gossip.id, [selectedGossipId, gossip.id]);
 
     return (
         <>
@@ -28,11 +31,12 @@ const GossipTooltip = memo(function GossipTooltip({ gossip }: { gossip: GossipTy
                         onClick={(e) => {
                             e.stopPropagation();
                             e.nativeEvent.stopImmediatePropagation();
-                            setIsSelected(true);
+                            setSelectedGossip(gossip.id);
                         }}
                         onTouchStart={(e) => {
                             e.stopPropagation();
                             e.nativeEvent.stopImmediatePropagation();
+                            setSelectedGossip(gossip.id);
                         }}
                     >
                         {gossip.title}
@@ -50,7 +54,7 @@ const GossipTooltip = memo(function GossipTooltip({ gossip }: { gossip: GossipTy
                     autoPanPadding={[50, 50]}
                     offset={[0, -50]}
                 >
-                    <GossipDetail gossip={gossip} onClose={() => setIsSelected(false)} />
+                    <GossipDetail gossip={gossip} onClose={() => setSelectedGossip(undefined)} />
                 </Popup>
             )}
         </>

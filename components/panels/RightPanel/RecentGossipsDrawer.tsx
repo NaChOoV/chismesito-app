@@ -1,6 +1,4 @@
-import { Button } from '../../ui/button';
 import { useGossipContext } from '../../../context/GossipContext';
-import { useEffect } from 'react';
 import {
     Drawer,
     DrawerContent,
@@ -8,7 +6,6 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from '@/components/ui/drawer';
-import { X } from 'lucide-react';
 import { useMapContext } from '../../../context/MapContext';
 
 function getRelativeTime(date: Date | string) {
@@ -31,7 +28,7 @@ interface RecentGossipsDrawerProps {
 }
 
 export default function RecentGossipsDrawer({ open, onOpenChange }: RecentGossipsDrawerProps) {
-    const { recentGossips, addGossips } = useGossipContext();
+    const { recentGossips, addGossips, setSelectedGossip } = useGossipContext();
     const { flyToPosition } = useMapContext();
 
     return (
@@ -49,10 +46,11 @@ export default function RecentGossipsDrawer({ open, onOpenChange }: RecentGossip
                             <div
                                 key={gossip.id}
                                 className="border rounded-xl p-4 shadow-sm bg-card cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
-                                onClick={(e) => {
+                                onClick={() => {
                                     onOpenChange(false);
                                     flyToPosition([gossip.location.x, gossip.location.y]);
                                     addGossips([gossip]);
+                                    setSelectedGossip(gossip.id);
                                 }}
                             >
                                 <div className="flex items-center gap-2 mb-2">
