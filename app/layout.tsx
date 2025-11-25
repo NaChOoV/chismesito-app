@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { Metadata, Viewport } from 'next';
+import Head from 'next/head';
 
 export const metadata: Metadata = {
     title: 'Chismesito App',
@@ -32,6 +33,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
+            <Head>
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+                />
+            </Head>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 {children}
                 <Analytics />
